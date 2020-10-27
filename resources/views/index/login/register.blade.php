@@ -20,51 +20,62 @@
 		</div>
 		<!--register-->
 		<div class="registerArea">
-			<h3>注册新用户<span class="go">我有账号，去<a href="login.html" target="_blank">登陆</a></span></h3>
+			<h3>注册新用户<span class="go">我有账号，去<a href="{{url('index/login/login')}}" target="_blank">登录</a></span></h3>
 			<div class="info">
-				<form class="sui-form form-horizontal">
+				<form action="{{url('index/login/registerdo')}}" method="post" class="sui-form form-horizontal">
+				@csrf
 					<div class="control-group">
 						<label class="control-label">用户名：</label>
 						<div class="controls">
-							<input type="text" placeholder="请输入你的用户名" class="input-xfat input-xlarge">
+							<input type="text" name="user_name" placeholder="请输入你的用户名" class="input-xfat input-xlarge">
+							<b style="color:red">{{$errors->first('user_name')}}</b>
 						</div>
 					</div>
+
 					<div class="control-group">
-						<label for="inputPassword" class="control-label">登录密码：</label>
+						<label class="control-label">邮箱：</label>
 						<div class="controls">
-							<input type="password" placeholder="设置登录密码" class="input-xfat input-xlarge">
+							<input type="text" name="user_email" placeholder="请输入你的邮箱" class="input-xfat input-xlarge">
+							<b style="color:red">{{$errors->first('user_email')}}</b>
 						</div>
 					</div>
-					<div class="control-group">
-						<label for="inputPassword" class="control-label">确认密码：</label>
-						<div class="controls">
-							<input type="password" placeholder="再次确认密码" class="input-xfat input-xlarge">
-						</div>
-					</div>
-					
+
 					<div class="control-group">
 						<label class="control-label">手机号：</label>
 						<div class="controls">
-							<input type="text" placeholder="请输入你的手机号" class="input-xfat input-xlarge">
+							<input type="text" name="user_tel" placeholder="请输入你的手机号" class="input-xfat input-xlarge">
+							<b style="color:red">{{$errors->first('user_tel')}}</b>
 						</div>
 					</div>
+
+					<div class="control-group">
+						<label for="inputPassword" class="control-label">登录密码：</label>
+						<div class="controls">
+							<input type="password" name="user_pwd" placeholder="设置登录密码" class="input-xfat input-xlarge">
+							<b style="color:red">{{$errors->first('user_pwd')}}</b>
+						</div>
+					</div>
+
+					<div class="control-group">
+						<label for="inputPassword" class="control-label">确认密码：</label>
+						<div class="controls">
+							<input type="password" name="confirm_pwd" placeholder="再次确认密码" class="input-xfat input-xlarge">
+							<b style="color:red">{{$errors->first('confirm_pwd')}}</b>
+						</div>
+					</div>
+
 					<div class="control-group">
 						<label for="inputPassword" class="control-label">短信验证码：</label>
 						<div class="controls">
-							<input type="text" placeholder="短信验证码" class="input-xfat input-xlarge">  <a href="#">获取短信验证码</a>
+							<input type="text" name="" placeholder="短信验证码" class="input-xfat input-xlarge">  <a href="#">获取短信验证码</a>
+							<b style="color:red">{{$errors->first('')}}</b>
 						</div>
 					</div>
 					
 					<div class="control-group">
-						<label for="inputPassword" class="control-label">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-						<div class="controls">
-							<input name="m1" type="checkbox" value="2" checked=""><span>同意协议并注册《品优购用户协议》</span>
-						</div>
-					</div>
-					<div class="control-group">
 						<label class="control-label"></label>
 						<div class="controls btn-reg">
-							<a class="sui-btn btn-block btn-xlarge btn-danger" href="home.html" target="_blank">完成注册</a>
+							<button type="submit" class="sui-btn btn-block btn-xlarge btn-danger">完成注册</button>
 						</div>
 					</div>
 				</form>

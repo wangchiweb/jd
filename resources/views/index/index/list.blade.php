@@ -24,7 +24,15 @@
 				<div class="shortcut">
 					<ul class="fl">
 						<li class="f-item">品优购欢迎您！</li>
-						<li class="f-item">请<a href="login.html" target="_blank">登录</a>　<span><a href="register.html" target="_blank">免费注册</a></span></li>
+
+						@if(session('user_name'))
+							<li class="f-item" style="color:red">用户名：{{session('user_name')}}<span><a href="{{url('index/login/quit')}}">退出</a></span></li>								
+						@else
+							<li class="f-item">请<a href="{{url('index/login/login')}}" target="_blank">登录</a>　<span><a href="{{url('index/login/register')}}" target="_blank">免费注册</a></span></li>
+						@endif
+
+						<a href="{{url('index/goods/list')}}" target="_blank">商品列表</a>
+
 					</ul>
 					<ul class="fr">
 						<li class="f-item">我的订单</li>
@@ -145,7 +153,7 @@
 									<dl class="fore3">
 										<dt><a href="">音像</a></dt>
 										<dd><em><a href="">音乐</a></em><em><a href="">影视</a></em><em><a href="">教育音像</a></em><em><a href="">游戏</a></em></dd>
-									</dl>
+									</dl> 
 									<dl class="fore4">
 										<dt>文艺</dt>
 										<dd><em><a href="">小说</a></em><em><a href="">文学</a></em><em><a href="">青春文学</a></em><em><a href="">传记</a></em><em><a href="">艺术</a></em></dd>
@@ -545,99 +553,8 @@
 					</div>
 				</div>
 				<div class="yui3-u Right">
-					<div class="news">
-						<h4><em class="fl">品优购快报</em><span class="fr tip">更多 ></span></h4>
-						<div class="clearix"></div>
-						<ul class="news-list unstyled">
-							<li>
-								<span class="bold">[特惠]</span>备战开学季 全民半价购数码
-							</li>
-							<li>
-								<span class="bold">[公告]</span>备战开学季 全民半价购数码
-							</li>
-							<li>
-								<span class="bold">[特惠]</span>备战开学季 全民半价购数码
-							</li>
-							<li>
-								<span class="bold">[公告]</span>备战开学季 全民半价购数码
-							</li>
-							<li>
-								<span class="bold">[特惠]</span>备战开学季 全民半价购数码
-							</li>
-						</ul>
-					</div>
-					<ul class="yui3-g Lifeservice">
-						<li class="yui3-u-1-4 life-item tab-item">
-							<i class="list-item list-item-1"></i>
-							<span class="service-intro">话费</span>
-						</li>
-						<li class="yui3-u-1-4 life-item tab-item">
-							<i class="list-item list-item-2"></i>
-							<span class="service-intro">机票</span>
-						</li>
-						<li class="yui3-u-1-4 life-item tab-item">
-							<i class="list-item list-item-3"></i>
-							<span class="service-intro">电影票</span>
-						</li>
-						<li class="yui3-u-1-4 life-item tab-item">
-							<i class="list-item list-item-4"></i>
-							<span class="service-intro">游戏</span>
-						</li>
-						<li class="yui3-u-1-4 life-item notab-item">
-							<i class="list-item list-item-5"></i>
-							<span class="service-intro">彩票</span>
-						</li>
-						<li class="yui3-u-1-4 life-item notab-item">
-							<i class="list-item list-item-6"></i>
-							<span class="service-intro">加油站</span>
-						</li>
-						<li class="yui3-u-1-4 life-item notab-item">
-							<i class="list-item list-item-7"></i>
-							<span class="service-intro">酒店</span>
-						</li>
-						<li class="yui3-u-1-4 life-item notab-item">
-							<i class="list-item list-item-8"></i>
-							<span class="service-intro">火车票</span>
-						</li>
-						<li class="yui3-u-1-4 life-item  notab-item">
-							<i class="list-item list-item-9"></i>
-							<span class="service-intro">众筹</span>
-						</li>
-						<li class="yui3-u-1-4 life-item notab-item">
-							<i class="list-item list-item-10"></i>
-							<span class="service-intro">理财</span>
-						</li>
-						<li class="yui3-u-1-4 life-item notab-item">
-							<i class="list-item list-item-11"></i>
-							<span class="service-intro">礼品卡</span>
-						</li>
-						<li class="yui3-u-1-4 life-item notab-item">
-							<i class="list-item list-item-12"></i>
-							<span class="service-intro">白条</span>
-						</li>
-					</ul>
-					<div class="life-item-content">
-						<div class="life-detail">
-							<i class="close">关闭</i>
-							<p>话费充值</p>
-							<form action="" class="sui-form form-horizontal">
-								号码：<input type="text" id="inputphoneNumber" placeholder="输入你的号码" />
-							</form>
-							<button class="sui-btn btn-danger">快速充值</button>
-						</div>
-						<div class="life-detail">
-							<i class="close">关闭</i> 机票
-						</div>
-						<div class="life-detail">
-							<i class="close">关闭</i> 电影票
-						</div>
-						<div class="life-detail">
-							<i class="close">关闭</i> 游戏
-						</div>
-					</div>
-					<div class="ads">
-						<img src="/static/index/img/ad1.png" />
-					</div>
+					<h1>抽奖转盘</h1>
+					<button id="prize">开始抽奖</button>
 				</div>
 			</div>
 		</div>
@@ -1408,3 +1325,24 @@ $(function(){
 
 
 </html>
+<script src=""></script>
+<script>
+	$(function(){
+		/**给开始抽奖绑定点击事件 */
+		$(document).on('click','#prize',function(){
+			//alert(324523);
+			$.ajax({
+				url:"{{url('index/index/start')}}",
+				type:"get",
+				dataType:"json",
+				success:function(res){
+					if(res.errno==400003){   //如果用户未登录，跳回登录页面
+						window.location.href="{{url('index/login/login')}}";
+					}
+					alert(res.msg);
+					alert(res.data.level);
+				}
+			});
+		})
+	})
+</script>

@@ -26,12 +26,14 @@ class CategoryController extends AdminController
     {
         $grid = new Grid(new Category());
 
-        $grid->column('cat_id', __('Cat id'));
-        $grid->column('cat_name', __('Cat name'));
+        $grid->column('cat_id', __('分类id'));
+        $grid->model()->orderBy('cat_id',"desc");
+        
+        $grid->column('cat_name', __('分类名称'));
         $grid->column('keywords', __('Keywords'));
         $grid->column('cat_desc', __('Cat desc'));
-        $grid->column('parent_id', __('Parent id'));
-        $grid->column('sort_order', __('Sort order'));
+        $grid->column('parent_id', __('父级分类'));
+        $grid->column('sort_order', __('排序'));
         $grid->column('template_file', __('Template file'));
         $grid->column('measure_unit', __('Measure unit'));
         $grid->column('show_in_nav', __('Show in nav'));
@@ -55,7 +57,7 @@ class CategoryController extends AdminController
         $show = new Show(Category::findOrFail($id));
 
         $show->field('cat_id', __('Cat id'));
-        $show->field('cat_name', __('Cat name'));
+        $show->field('cat_name', __('分类名称'));
         $show->field('keywords', __('Keywords'));
         $show->field('cat_desc', __('Cat desc'));
         $show->field('parent_id', __('Parent id'));
@@ -81,19 +83,23 @@ class CategoryController extends AdminController
     {
         $form = new Form(new Category());
 
-        $form->text('cat_name', __('Cat name'));
-        $form->text('keywords', __('Keywords'));
-        $form->text('cat_desc', __('Cat desc'));
-        $form->number('parent_id', __('Parent id'));
-        $form->switch('sort_order', __('Sort order'))->default(50);
-        $form->text('template_file', __('Template file'));
-        $form->text('measure_unit', __('Measure unit'));
-        $form->switch('show_in_nav', __('Show in nav'));
-        $form->text('style', __('Style'));
-        $form->switch('is_show', __('Is show'))->default(1);
-        $form->switch('grade', __('Grade'));
-        $form->text('filter_attr', __('Filter attr'));
-        $form->switch('float_percent', __('Float percent'));
+        $form->text('cat_name', __('分类名称'));
+        // $form->text('keywords', __('Keywords'));
+        // $form->text('cat_desc', __('Cat desc'));
+
+        $data=Category::selectOptions();
+        //dd($data);
+
+        $form->select('parent_id', __('父级分类'))->options($data);
+        $form->number('sort_order', __('输入排序'))->default(50);
+        // $form->text('template_file', __('Template file'));
+        // $form->text('measure_unit', __('Measure unit'));
+        // $form->switch('show_in_nav', __('Show in nav'));
+        // $form->text('style', __('Style'));
+        // $form->switch('is_show', __('Is show'))->default(1);
+        // $form->switch('grade', __('Grade'));
+        // $form->text('filter_attr', __('Filter attr'));
+        // $form->switch('float_percent', __('Float percent'));
 
         return $form;
     }

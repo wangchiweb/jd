@@ -22,11 +22,6 @@
 			<div class="py-container login">
 				<div class="loginform">
 					<ul class="sui-nav nav-tabs tab-wraped">
-						<li>
-							<a href="#index" data-toggle="tab">
-								<h3>扫描登录</h3>
-							</a>
-						</li>
 						<li class="active">
 							<a href="#profile" data-toggle="tab">
 								<h3>账户登录</h3>
@@ -34,39 +29,31 @@
 						</li>
 					</ul>
 					<div class="tab-content tab-wraped">
-						<div id="index" class="tab-pane">
-							<p>二维码登录，暂为官网二维码</p>
-							<img src="/static/index/img/wx_cz.jpg" />
-						</div>
 						<div id="profile" class="tab-pane  active">
-							<form class="sui-form">
+
+						@if(session('msg'))
+							<div style="color:red">{{session('msg')}}</div>
+						@endif
+
+							<form action="{{url('index/login/logindo')}}" method="post" class="sui-form">
+							@csrf
 								<div class="input-prepend"><span class="add-on loginname"></span>
-									<input id="prependedInput" type="text" placeholder="邮箱/用户名/手机号" class="span2 input-xfat">
+									<input type="text" name="user_name" placeholder="用户名/邮箱/手机号" class="span2 input-xfat">
+									<b style="color:red">{{$errors->first('user_name')}}</b>
 								</div>
 								<div class="input-prepend"><span class="add-on loginpwd"></span>
-									<input id="prependedInput" type="password" placeholder="请输入密码" class="span2 input-xfat">
-								</div>
-								<div class="setting">
-									<label class="checkbox inline">
-          <input name="m1" type="checkbox" value="2" checked=""> 
-          自动登录
-        </label>
-									<span class="forget">忘记密码？</span>
+									<input type="password" name="user_pwd" placeholder="请输入密码" class="span2 input-xfat">
+									<b style="color:red">{{$errors->first('user_pwd')}}</b>
 								</div>
 								<div class="logined">
-									<a class="sui-btn btn-block btn-xlarge btn-danger" href="home-index.html" >登&nbsp;&nbsp;录</a>
+									<button type="submit" class="sui-btn btn-block btn-xlarge btn-danger">登&nbsp;&nbsp;录</button>
 								</div>
 							</form>
 							<div class="otherlogin">
 								<div class="types">
-									<ul>
-										<li><img src="/static/index/img/qq.png" width="35px" height="35px" /></li>
-										<li><img src="/static/index/img/sina.png" /></li>
-										<li><img src="/static/index/img/ali.png" /></li>
-										<li><img src="/static/index/img/weixin.png" /></li>
-									</ul>
+									<a href="https://github.com/login/oauth/authorize?client_id=de2b9614a1054a4de05f" target="_blank">GitHub登录</a>
 								</div>
-								<span class="register"><a href="register.html" target="_blank">立即注册</a></span>
+								<span class="register"><a href="{{url('index/login/register')}}" target="_blank">立即注册</a></span>
 							</div>
 						</div>
 					</div>

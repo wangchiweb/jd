@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Index;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\User;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
+use GuzzleHttp\Client;
 class LoginController extends Controller{
     /**注册视图 */
     public function register(){
@@ -34,15 +37,31 @@ class LoginController extends Controller{
 	    	]
 	    );
         $data=$request->except('_token');
+        dd($data);
         $data['register_time']=time();
         $data['last_login_ip']=$_SERVER['REMOTE_ADDR'];
         //生成密码
         $data['user_pwd']=password_hash($data['user_pwd'],PASSWORD_BCRYPT);
         $data['confirm_pwd']=password_hash($data['confirm_pwd'],PASSWORD_BCRYPT);
         //dd($data);
-        $res=User::insert($data);
-        //dd($res);
-        if($res){
+        // $res=User::insert($data);
+        // //dd($res);
+        //获取用户id
+        $user_id=User::insertGetId($data);
+        //dd($user_id);
+        
+        //生成激活码
+        $active_code=Str::random(64);
+        //dd($active_code);
+        //保存激活码与用户的对应关系，使用有序集合
+        $redis_active_key='ss:user:active';
+        Redis::zAdd($redis_active_key,$user_id,$active_code);
+
+        $active_url=env('APP_URL').'/user/active?code='.$active_code;
+        echo $active_url;die;
+
+                     
+        if($user_id){
             return redirect('index/login/login');
         }
     }
@@ -56,7 +75,8 @@ class LoginController extends Controller{
     public function logindo(Request $request){
         $user_name=$request->input('user_name');
         $user_pwd=$request->input('user_pwd');
-        //dd($user_pwd);
+        // dd($user_pwd);
+        // dd($user_name);
 
         $key='login_count'.$user_name;
         //dd($key);
@@ -71,25 +91,48 @@ class LoginController extends Controller{
             ->orwhere(['user_email'=>$user_name])
             ->orwhere(['user_tel'=>$user_name])
             ->first();
-        $res=$res->toArray();
         //dd($res);
-        if(empty($res)){
-            die('用户不存在');
+        if(!$res){
+            return redirect('index/login/login')->with('msg','此用户不存在');
         }
         //验证密码
-        $p=password_verify($user_pwd,$res['user_pwd']);
+        $p=password_verify($user_pwd,$res->user_pwd);
         //dd($p);
         if(!$p){   //如果密码不正确
             //记录错误次数
             $count=Redis::incr('$key');
             Redis::expire($key,600);   //10分钟
             echo '密码错误次数:'.$count;die;
+            return redirect('index/login/login')->with('msg','密码不正确');
         }
         if($res){   //登录成功
             Redis::del($key);
-            // 用户登录成功后设置session 存入用户的信息
-            session(['user_id'=>$res['user_id'],'user_name'=>$res['user_name'],'user_tel'=>$res['user_tel'],'user_email'=>$res['user_email']]);
-            // return redirect('');
+            // 用户登录成功后设置session,存入用户的信息
+            session(['user_id'=>$res['user_id'],'user_name'=>$res['user_name'],'user_email'=>$res['user_email'],'user_tel'=>$res['user_tel']]);
+            return redirect('index/index/list')->with('msg','登录成功');
         }
+    }
+
+    /**退出登录 */
+    public function quit(Request $request){   //销毁session
+        $request->session()->flush();   //销毁session中的所有数据
+        return redirect('index/login/login');
+    }
+
+    public function git(Request $request){
+        $code=$request->get('code');
+        //echo $code;
+        $get=$this->getAccessToken($code);
+        print_r($get);
+    }
+
+    public function guzzlel(){
+        $url='https://devapi.qweather.com/v7/weather/now?location=101010100&key=90b245c4fc6f4f0499cb1b7e69f7f31e&gzip=n';
+        $client=new Client();
+        $res=$client->request('GET',$url,['verify'=>false]);
+        $body=$res->getBody();   //获取接口相应的数据
+        echo $body;
+        $data=json_decode($body,true);
+        dd($data); 
     }
 }
