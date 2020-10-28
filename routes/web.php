@@ -60,3 +60,8 @@ Route::get('/test', function () {
         Route::any('add','Index\CartController@add');//加入购物车
     });
 
+/**MovieController控制器 */
+    //电影票
+    Route::prefix('movie')->group(function(){   //路由分组
+        Route::get('index','MovieController@index');   //电影票列表
+    });
