@@ -5,12 +5,15 @@ namespace App\Http\Controllers\Index;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Prize;
+use App\Model\Goods;
 
 class IndexController extends Controller
 {
     /**前台首页 */
     public function list(){
-        return view('index/index/list');
+        $res=Goods::limit(12)->get();
+        //dd($res);
+        return view('index/index/list',['res'=>$res]);
     }
 
     /**开始抽奖 */
