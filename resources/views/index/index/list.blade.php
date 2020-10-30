@@ -26,12 +26,12 @@
 						<li class="f-item">品优购欢迎您！</li>
 
 						@if(session('user_name'))
-							<li class="f-item" style="color:red">用户名：{{session('user_name')}}<span><a href="{{url('index/login/quit')}}">退出</a></span></li>								
+							<li class="f-item" style="color:red">用户名：{{session('user_name')}}<span><a href="{{url('login/quit')}}">退出</a></span></li>								
 						@else
-							<li class="f-item">请<a href="{{url('index/login/login')}}" target="_blank">登录</a>　<span><a href="{{url('index/login/register')}}" target="_blank">免费注册</a></span></li>
+							<li class="f-item">请<a href="{{url('login/login')}}" target="_blank">登录</a>　<span><a href="{{url('login/register')}}" target="_blank">免费注册</a></span></li>
 						@endif
 
-						<a href="{{url('index/goods/list')}}" target="_blank">商品列表</a>
+						<a href="{{url('goods/list')}}" target="_blank">商品列表</a>
 
 					</ul>
 					<ul class="fr">
@@ -1337,7 +1337,7 @@ $(function(){
 				dataType:"json",
 				success:function(res){
 					if(res.errno==400003){   //如果用户未登录，跳回登录页面
-						window.location.href="{{url('index/login/login')}}";
+						window.location.href="{{url('login/login')}}";
 					}
 					alert(res.msg);
 					alert(res.data.level);

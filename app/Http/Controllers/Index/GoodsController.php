@@ -26,7 +26,7 @@ class GoodsController extends Controller
             $res = Goods::find($goods_id);
             // 商品不存在
             if(empty($res)){
-                return redirect('index/goods/list');
+                return redirect('goods/list');
             }
             Redis::incr('shop_view:'.$res['goods_id']);
             $res = $res->toArray();

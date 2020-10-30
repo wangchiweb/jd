@@ -35,7 +35,7 @@
 							<div style="color:red">{{session('msg')}}</div>
 						@endif
 
-							<form action="{{url('index/login/logindo')}}" method="post" class="sui-form">
+							<form action="{{url('login/logindo')}}" method="post" class="sui-form">
 							@csrf
 								<div class="input-prepend"><span class="add-on loginname"></span>
 									<input type="text" name="user_name" placeholder="用户名/邮箱/手机号" class="span2 input-xfat">
@@ -53,7 +53,7 @@
 								<div class="types">
 									<a href="https://github.com/login/oauth/authorize?client_id=de2b9614a1054a4de05f" target="_blank">GitHub登录</a>
 								</div>
-								<span class="register"><a href="{{url('index/login/register')}}" target="_blank">立即注册</a></span>
+								<span class="register"><a href="{{url('login/register')}}" target="_blank">立即注册</a></span>
 							</div>
 						</div>
 					</div>

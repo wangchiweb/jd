@@ -20,9 +20,9 @@
 		</div>
 		<!--register-->
 		<div class="registerArea">
-			<h3>注册新用户<span class="go">我有账号，去<a href="{{url('index/login/login')}}" target="_blank">登录</a></span></h3>
+			<h3>注册新用户<span class="go">我有账号，去<a href="{{url('login/login')}}" target="_blank">登录</a></span></h3>
 			<div class="info">
-				<form action="{{url('index/login/registerdo')}}" method="post" class="sui-form form-horizontal">
+				<form action="{{url('login/registerdo')}}" method="post" class="sui-form form-horizontal">
 				@csrf
 					<div class="control-group">
 						<label class="control-label">用户名：</label>

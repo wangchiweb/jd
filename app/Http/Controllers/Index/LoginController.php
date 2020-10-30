@@ -62,7 +62,7 @@ class LoginController extends Controller{
 
                      
         if($user_id){
-            return redirect('index/login/login');
+            return redirect('login/login');
         }
     }
 
@@ -93,7 +93,7 @@ class LoginController extends Controller{
             ->first();
         //dd($res);
         if(!$res){
-            return redirect('index/login/login')->with('msg','此用户不存在');
+            return redirect('login/login')->with('msg','此用户不存在');
         }
         //验证密码
         $p=password_verify($user_pwd,$res->user_pwd);
@@ -103,20 +103,20 @@ class LoginController extends Controller{
             $count=Redis::incr('$key');
             Redis::expire($key,600);   //10分钟
             echo '密码错误次数:'.$count;die;
-            return redirect('index/login/login')->with('msg','密码不正确');
+            return redirect('login/login')->with('msg','密码不正确');
         }
         if($res){   //登录成功
             Redis::del($key);
             // 用户登录成功后设置session,存入用户的信息
             session(['user_id'=>$res['user_id'],'user_name'=>$res['user_name'],'user_email'=>$res['user_email'],'user_tel'=>$res['user_tel']]);
-            return redirect('index/index/list')->with('msg','登录成功');
+            return redirect('/')->with('msg','登录成功');
         }
     }
 
     /**退出登录 */
     public function quit(Request $request){   //销毁session
         $request->session()->flush();   //销毁session中的所有数据
-        return redirect('index/login/login');
+        return redirect('login/login');
     }
 
     public function git(Request $request){

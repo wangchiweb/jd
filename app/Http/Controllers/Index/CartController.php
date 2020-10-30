@@ -15,7 +15,7 @@ class CartController extends Controller{
         $user_id = session()->get('user_id');
         //echo $user_id;die;
             if(empty($user_id)){
-                return redirect('index/login/login');
+                return redirect('login/login');
             }
 
         $goods_id = $request->get('goods_id');
@@ -35,7 +35,7 @@ class CartController extends Controller{
         $res=Cart::insertGetId($cart_info);
         //dd($res);
         if($res>0){
-            return redirect('index/cart/list');
+            return redirect('cart/list');
         }else{
             $data=[
                 'errno'=>500001,
@@ -50,7 +50,7 @@ class CartController extends Controller{
         $user_id = session()->get('user_id');
         //echo $user_id;die;
         if(empty($user_id)){
-            return redirect('index/login/login');
+            return redirect('login/login');
         }
 
         //获取购物车商品信息

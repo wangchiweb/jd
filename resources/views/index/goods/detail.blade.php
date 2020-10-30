@@ -28,9 +28,9 @@
 						<li class="f-item">品优购欢迎您！</li>
 						
 						@if(session('user_name'))
-							<li class="f-item" style="color:red">用户名：{{session('user_name')}}<span><a href="{{url('index/login/quit')}}">退出</a></span></li>								
+							<li class="f-item" style="color:red">用户名：{{session('user_name')}}<span><a href="{{url('login/quit')}}">退出</a></span></li>								
 						@else
-							<li class="f-item">请<a href="{{url('index/login/login')}}" target="_blank">登录</a>　<span><a href="{{url('index/login/register')}}" target="_blank">免费注册</a></span></li>
+							<li class="f-item">请<a href="{{url('login/login')}}" target="_blank">登录</a>　<span><a href="{{url('login/register')}}" target="_blank">免费注册</a></span></li>
 						@endif
 
 					</ul>
@@ -339,7 +339,7 @@ $(function(){
 							<div class="fl">
 								<ul class="btn-choose unstyled">
 									<li>
-										<a href="{{url('index/cart/add')}}?goods_id={{$res['goods_id']}}" target="_blank" class="sui-btn  btn-danger addshopcar">加入购物车</a>
+										<a href="{{url('cart/add')}}?goods_id={{$res['goods_id']}}" target="_blank" class="sui-btn  btn-danger addshopcar">加入购物车</a>
 									</li>
 								</ul>
 							</div>

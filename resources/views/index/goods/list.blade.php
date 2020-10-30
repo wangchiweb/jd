@@ -25,9 +25,9 @@
 								<li class="f-item">品优购欢迎您！</li>
 								
 								@if(session('user_name'))
-									<li class="f-item" style="color:red">用户名：{{session('user_name')}}<span><a href="{{url('index/login/quit')}}">退出</a></span></li>								
+									<li class="f-item" style="color:red">用户名：{{session('user_name')}}<span><a href="{{url('login/quit')}}">退出</a></span></li>								
 								@else
-									<li class="f-item">请<a href="{{url('index/login/login')}}" target="_blank">登录</a>　<span><a href="{{url('index/login/register')}}" target="_blank">免费注册</a></span></li>
+									<li class="f-item">请<a href="{{url('login/login')}}" target="_blank">登录</a>　<span><a href="{{url('login/register')}}" target="_blank">免费注册</a></span></li>
 								@endif																			
 
 							</ul>
@@ -356,7 +356,7 @@
 						<li class="yui3-u-1-5">
 							<div class="list-wrap">
 								<div class="p-img">  
-									<a href="{{url('index/goods/detail')}}?goods_id={{$v->goods_id}}" target="_blank">
+									<a href="{{url('goods/detail')}}?goods_id={{$v->goods_id}}" target="_blank">
 										<img src="{{env('APP_URL')}}/storage/{{$v->goods_img}}" width="" height="">
 									</a>
 								</div>
