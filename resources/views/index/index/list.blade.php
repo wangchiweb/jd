@@ -555,6 +555,9 @@
 				<div class="yui3-u Right">
 					<h1>抽奖转盘</h1>
 					<button id="prize">开始抽奖</button>
+					<br><br><br>	
+					<h1>领券中心</h1>
+					<button id="coupon">领券</button>
 				</div>
 			</div>
 		</div>
@@ -1239,7 +1242,7 @@ $(function(){
 		$(document).on('click','#prize',function(){
 			//alert(324523);
 			$.ajax({
-				url:"{{url('index/index/start')}}",
+				url:"{{url('/start')}}",
 				type:"get",
 				dataType:"json",
 				success:function(res){
@@ -1248,6 +1251,22 @@ $(function(){
 					}
 					alert(res.msg);
 					alert(res.data.level);
+				}
+			});
+		})
+
+		/**给领券绑定点击事件 */
+		$(document).on('click','#coupon',function(){
+			// alert(5637);
+			$.ajax({
+				url:"/coupon",
+				type:"get",
+				dataType:"json",
+				success:function(res){
+					// console.log(res);
+					if(res.errno==400003){
+						window.location.href="login/login";
+					}
 				}
 			});
 		})

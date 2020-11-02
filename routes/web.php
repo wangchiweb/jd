@@ -35,6 +35,7 @@ Route::get('/test', function () {
 	//首页
         Route::get('/','Index\IndexController@list');//首页视图 
         Route::get('/start','Index\IndexController@start');//开始抽奖
+        Route::get('/coupon','Index\IndexController@coupon')->middleware('check.login');//领券
 
 /**GoodsController控制器(前台) */
     //商品

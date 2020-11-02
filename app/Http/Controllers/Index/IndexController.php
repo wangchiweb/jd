@@ -86,4 +86,14 @@ class IndexController extends Controller
 
         return $data;
     }
+
+    /**领券 */
+    public function coupon(){
+        
+        $response=[
+            'errno'=>0,
+            'msg'=>'ok'
+        ];
+        return $response;
+    }
 }
