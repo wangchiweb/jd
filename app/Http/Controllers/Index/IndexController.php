@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Model\Prize;
 use App\Model\Goods;
+use App\Model\Coupon;
 
 class IndexController extends Controller
 {
@@ -88,12 +89,43 @@ class IndexController extends Controller
     }
 
     /**领券 */
-    public function coupon(){
-        
+    public function coupon(Request $request){
+        //根据type领不同的券
+        $type=$request->get('type');
+        switch($type){
+            case 1:
+                $this->coupon_full();
+                die;
+            case 2:
+                $this->coupon_full();
+                die;
+            case 3:
+                $this->coupon_full();
+                die;
+            default:
+            echo "参数错误";
+            die;
+        }
+
         $response=[
             'errno'=>0,
             'msg'=>'ok'
         ];
         return $response;
+    }
+
+    /**生成满减的券 */
+    public function coupon_full(){
+        $user_id=session()->get('user_id');
+        $begin_time=strtotime('2020-11-12');
+        $expire_time=strtotime('2020-11-12');
+        $data=[
+            'user_id'=>$user_id,
+            'add_time'=>time(),
+            'begin_time'=>$begin_time,
+            'expire_time'=>$expire_time,
+            'type'=>1,
+        ];
+        Coupon::insertGetId($data);
     }
 }
