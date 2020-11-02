@@ -11,8 +11,12 @@ class IndexController extends Controller
 {
     /**前台首页 */
     public function list(){
+        // //offset (offset 从哪里开始取数据), limit (limit 想要查询的数据条数)
+        // $res=Goods::offset(0)->limit(6)->get();
+        // $res1=Goods::offset(6)->limit(6)->get();
+
         $res=Goods::limit(12)->get();
-        //dd($res);
+        // dd($res);
         return view('index/index/list',['res'=>$res]);
     }
 
