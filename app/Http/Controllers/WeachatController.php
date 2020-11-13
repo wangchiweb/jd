@@ -289,7 +289,7 @@ class WeachatController extends Controller{
                     'url'   => 'http://2004wch.comcto.com/'
                 ],
                 [
-                    'name'  => '二级菜单',
+                    'name'  => '菜单',
                     "sub_button"    => [
                         [
                             "type"  =>  "click",
