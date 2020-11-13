@@ -329,7 +329,7 @@ class WeachatController extends Controller{
         if($info['errcode']==0){   //判断错误码
             echo '<pre>';print_r($info);echo '</pre>';
         }else{
-            echo date("Y-m-d H:i:s").  "创建菜单成功";
+            echo date("Y-m-d H:i:s")."创建菜单成功";
         }
 
     }
