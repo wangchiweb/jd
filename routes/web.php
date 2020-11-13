@@ -64,3 +64,13 @@ Route::get('/test', function () {
     Route::prefix('movie')->group(function(){   //路由分组
         Route::get('index','MovieController@index');   //电影票列表
     });
+
+
+/**微信 */
+Route::prefix('/wechat')->group(function(){   //路由分组
+    Route::get('/','WeachatController@wechat'); //接口测试
+    Route::post('/','WeachatController@event'); //接受事件推送
+    Route::get('/getaccesstoken','WeachatController@getaccesstoken'); //获取access_token
+    Route::post('/createmenu','WeachatController@createmenu'); //接受事件推送
+
+});

@@ -9,6 +9,12 @@
 
     <link rel="stylesheet" type="text/css" href="/static/index/css/webbase.css" />
     <link rel="stylesheet" type="text/css" href="/static/index/css/pages-cart.css" />
+
+	<style>
+		.li{
+			color:grey;
+		}
+	</style>
 </head>
 
 <body>
@@ -65,8 +71,8 @@
 					<div class="yui3-u-1-4"><input type="checkbox" name="" id="" value="" /> 全部</div>
 					<div class="yui3-u-1-4">商品</div>
 					<div class="yui3-u-1-8">单价（元）</div>
-					<div class="yui3-u-1-8">数量</div>
-					<div class="yui3-u-1-8">小计（元）</div>
+					<div class="yui3-u-1-8">库存</div>
+					<div class="yui3-u-1-8">是否下架</div>
 					<div class="yui3-u-1-8">操作</div>
 				</div>
 				<div class="cart-item-list">
@@ -75,25 +81,25 @@
 						@foreach($goods as $k=>$v)
 						<div class="cart-list">
 							<ul class="goods-list yui3-g">
-								<li class="yui3-u-1-24">
+								<li class="yui3-u-1-24" id="li">
 									<input type="checkbox" name="" id="" value="" />
 								</li>
-								<li class="yui3-u-11-24">
+								<li class="yui3-u-11-24" id="test">
 									<div class="good-item">
 										<div class="item-img"><img src="{{env('APP_URL')}}/storage/{{$v['goods_img']}}"></div>
-										<div class="item-msg">
+										<div id="name" >
 										{{$v['goods_name']}}
 										</div>
 									</div>
 								</li>
 								
 								<li class="yui3-u-1-8"><span class="price">{{$v['shop_price']}}</span></li>
-								<li class="yui3-u-1-8">
-									<a href="javascript:void(0)" class="increment mins">-</a>
-									<input autocomplete="off" type="text" value="{{$v['goods_num']}}" minnum="1" class="itxt" />
-									<a href="javascript:void(0)" class="increment plus">+</a>
+								<li class="yui3-u-1-8"><span class="price">{{$v['goods_number']}}</span></li>
+								<li class="yui3-u-1-8" id="is_shelf" is_shelf="{{$v['is_shelf']}}">
+									<span>
+										{{$v['is_shelf']}}
+									</span>
 								</li>
-								<li class="yui3-u-1-8"><span class="sum">{{$v['shop_price']}}</span></li>
 								<li class="yui3-u-1-8">
 									<a href="#none">删除</a><br />
 									<a href="#none">移到我的关注</a>
@@ -418,3 +424,16 @@
 </body>
 
 </html>
+
+<script>
+	$(function(){
+		// alert(345);
+		var is_shelf=$('#is_shelf').attr('is_shelf');
+		//console.log(is_shelf);
+		if(is_shelf==1){
+			// alert(4356);
+			var a=$('#li').next("[id='test']").find("[id='name']").addClass('li');
+		}
+		
+	})    
+</script>
