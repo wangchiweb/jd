@@ -316,21 +316,21 @@ class WeachatController extends Controller{
             ]
         ];
         
-        //使用guzzle发起POST请求
-        $client=new Client();   //实例化 客户端
-        $response=$client->request('POST',$url,[
-            'verify'=>false,      
-            'body'=>json_encode($menu,JSON_UNESCAPED_UNICODE)
-        ]);   //发起请求并接收响应
+        // //使用guzzle发起POST请求
+        // $client=new Client();   //实例化 客户端
+        // $response=$client->request('POST',$url,[
+        //     'verify'=>false,      
+        //     'body'=>json_encode($menu,JSON_UNESCAPED_UNICODE)
+        // ]);   //发起请求并接收响应
         
-        $json_data=$response->getBody();   //服务器的响应数据
-        //判断接口返回
-        $info=json_decode($json_data,true);
-        if($info['errcode']==0){   //判断错误码
-            echo '<pre>';print_r($info);echo '</pre>';
-        }else{
-            echo date("Y-m-d H:i:s").  "创建菜单成功";
-        }
+        // $json_data=$response->getBody();   //服务器的响应数据
+        // //判断接口返回
+        // $info=json_decode($json_data,true);
+        // if($info['errcode']==0){   //判断错误码
+        //     echo '<pre>';print_r($info);echo '</pre>';
+        // }else{
+        //     echo date("Y-m-d H:i:s").  "创建菜单成功";
+        // }
 
     }
     /**获取用户信息 */
