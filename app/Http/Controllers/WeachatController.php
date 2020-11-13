@@ -280,7 +280,9 @@ class WeachatController extends Controller{
     public function createmenu(){
         //获取access_token
         $access_token=$this->getaccesstoken();
+        //接口
         $url="https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$access_token;
+        $delete = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=".$access_token;
         $menu = [
             'button'    => [
                 [
@@ -318,7 +320,7 @@ class WeachatController extends Controller{
         
         //使用guzzle发起POST请求
         $client=new Client();   //实例化 客户端
-        $response=$client->request('POST',$url,[
+        $response=$client->request('POST',$delete,[
             'verify'=>false,      
             'body'=>json_encode($menu,JSON_UNESCAPED_UNICODE)
         ]);   //发起请求并接收响应
