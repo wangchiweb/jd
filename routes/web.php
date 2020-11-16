@@ -74,3 +74,9 @@ Route::prefix('/wechat')->group(function(){   //路由分组
     Route::post('/createmenu','WeachatController@createmenu'); //接受事件推送
 
 });
+
+/**小程序接口 */
+Route::prefix('/api')->group(function(){   //路由分组
+    Route::get('/test','Wx\ApiController@test');   //测试
+    
+});
