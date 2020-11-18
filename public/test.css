@@ -1,0 +1,38 @@
+
+.swiper {
+    height: 180px;
+    background-color: turquoise;
+    border: 1px solid red;
+}
+
+.nav    {
+    border: 1px solid grey;
+    margin-top: 18px;
+} 
+
+.span   {
+    border: 1px solid skyblue;
+    color: darkslategrey;
+    font-size: 24px;
+    margin-left: 18px;
+}
+
+.goods_price    {
+    color: fuchsia;
+    font-size: 18px;
+}
+
+.list   {
+    float: left;
+    border: 1px solid blueviolet;
+    margin-top: 18px;
+    padding-bottom: 36px;
+}
+
+.li    {
+    float: left;
+    list-style: none;
+    border: 1px solid chartreuse;
+    margin-top: 18px;
+    margin-left: 18px;
+}

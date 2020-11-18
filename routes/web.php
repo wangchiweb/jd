@@ -78,5 +78,7 @@ Route::prefix('/wechat')->group(function(){   //路由分组
 /**小程序接口 */
 Route::prefix('/api')->group(function(){   //路由分组
     Route::get('/test','Wx\ApiController@test');   //测试
-    
+    Route::get('/login','Wx\ApiController@login');   //登录
+    Route::get('/list','Wx\ApiController@list');   //商品列表
+
 });
