@@ -56,14 +56,46 @@ class ApiController extends Controller
         
     }
     /**商品列表 */
-    public function list(){
-        $goodsinfo=Goods::select('goods_id','goods_name','shop_price','goods_img')->limit(10)->get()->toArray();
-        // dd($goodsinfo);
+    public function list(Request $request){
+        // $list=Goods::select('goods_id','goods_name','shop_price','goods_img')->limit(10)->get()->toArray();
+        // dd($list);
+        $page_size=$request->get('ps');
+        // dd($page_size);
+        $list=Goods::select('goods_id','goods_name','shop_price','goods_img')->paginate($page_size)->toArray();
+        // dd($list['data']);
+        // dd($list->items());
         $response=[
             'errno'=>0,
             'msg'=>'ok',
             'data'=>[
-                'goodsinfo'=>$goodsinfo
+                'list'=>$list['data']
+            ]
+        ];
+        return $response;
+    }
+    /**商品详情 */
+    public function detail(Request $request){
+        $goods_id=$request->get('goods_id');
+        //echo $goods_id;die;
+        $key = 'detail:'.$goods_id;
+        $detail = Redis::hGetall($key);
+        // 查询缓存
+        if(empty($detail)){
+            $detail = Goods::find($goods_id);
+            // 商品不存在
+            if(empty($detail)){
+                return redirect('goods/list');
+            }
+            Redis::incr('shop_view:'.$detail['goods_id']);
+            $detail = $detail->toArray();
+            Redis::hMset($key,$detail);
+        }
+        // dd($detail);
+        $response=[
+            'errno'=>0,
+            'msg'=>'ok',
+            'data'=>[
+                'detail'=>$detail
             ]
         ];
         return $response;
