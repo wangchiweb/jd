@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Model\Goods;
+use App\Model\WxUser;
 
 class ApiController extends Controller
 {
@@ -26,7 +27,11 @@ class ApiController extends Controller
     public function login(){
         //接受code
         $code=request()->get('code');
-        // print_r($code);
+        // print_r($code);die;
+        //获取用户信息
+        $userinfo=json_decode(file_get_contents("php://input"),true);
+        // dd($userinfo);
+
         //使用code
         $url="https://api.weixin.qq.com/sns/jscode2session?appid=".env("WX_XCX_APPID")."&secret=".env("WX_XCX_APPSECRET")."&js_code=".$code."&grant_type=authorization_code";
         $data=json_decode(file_get_contents($url),true); 
@@ -38,6 +43,28 @@ class ApiController extends Controller
                 'msg'=>'登录失败'
             ];
         }else{   //登录成功
+            $openid=$data['openid'];   //用户openID
+            //判断新用户 老用户
+            $u=WxUser::where(['openid'=>$openid])->first();
+            if($u){
+                //老用户
+            }else{
+                $u_info=[
+                    'openid'=>$openid,
+                    'nickname'=>$userinfo['u']['nickName'],
+                    'sex'=>$userinfo['u']['gender'],
+                    'language'=>$userinfo['u']['language'],
+                    'city'=>$userinfo['u']['city'],
+                    'province'=>$userinfo['u']['province'],
+                    'country'=>$userinfo['u']['country'],
+                    'headimgurl'=>$userinfo['u']['avatarUrl'],
+                    'subscribe_time'=>time(),
+                    'type'=>3
+                ];
+                WxUser::insert($u_info);
+            }
+
+            //生成token
             $token=sha1($data['openid'].$data['session_key'].mt_rand(0,999999));
             //保存token
             $token_key='xcx_token:'.$token;
