@@ -84,6 +84,7 @@ class ApiController extends Controller
     }
     /**商品列表 */
     public function list(Request $request){
+        // dd(235464563);
         // $list=Goods::select('goods_id','goods_name','shop_price','goods_img')->limit(10)->get()->toArray();
         // dd($list);
         $page_size=$request->get('ps');
