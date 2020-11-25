@@ -6,10 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use App\Model\Goods;
+use App\Model\Cart;
 use App\Model\WxUser;
 
-class ApiController extends Controller
-{
+class ApiController extends Controller{
     /**测试 */
     public function test(){
         // echo 1234;die;
@@ -127,5 +127,37 @@ class ApiController extends Controller
             ]
         ];
         return $response;
+    }
+    /**加入购物车 */
+    public function addcart(Request $request){
+        $user_id=$request->get('user_id');
+        echo $user_id;die;
+
+        $goods_id=$request->get('goods_id');
+        //echo $goods_id;die;  
+
+        //购物车保存商品信息
+        $cart_info=[
+            'goods_id'=>$goods_id,
+            'user_id'=>$user_id,
+            'goods_num'=>$goods_num,
+            'add_time'=>time(),
+        ];
+
+        $res=Cart::insertGetId($cart_info);
+        //dd($res);
+        if($res>0){
+            return redirect('cart/list');
+        }else{
+            $data=[
+                'errno'=>500001,
+                'msg'=>'加入购物车失败'
+            ];
+            echo json_encode($data);
+        }
+    }
+    /**购物车列表 */
+    public function cartlist(){
+
     }
 }
