@@ -24,7 +24,7 @@ class ApiController extends Controller{
         echo json_encode($goodsinfo);
     }
     /**登录 */
-    public function login(){
+    public function login(Request $request){
         //接受code
         $code=request()->get('code');
         // print_r($code);die;
@@ -35,7 +35,7 @@ class ApiController extends Controller{
         //使用code
         $url="https://api.weixin.qq.com/sns/jscode2session?appid=".env("WX_XCX_APPID")."&secret=".env("WX_XCX_APPSECRET")."&js_code=".$code."&grant_type=authorization_code";
         $data=json_decode(file_get_contents($url),true); 
-        // print_r($data);
+        // dd($data);
         //自定义登录状态
         if(isset($data['errcode'])){   //登录失败
             $response=[
@@ -44,6 +44,7 @@ class ApiController extends Controller{
             ];
         }else{   //登录成功
             $openid=$data['openid'];   //用户openID
+            // dd($openid);
             //判断新用户 老用户
             $u=WxUser::where(['openid'=>$openid])->first();
             if($u){
@@ -61,16 +62,30 @@ class ApiController extends Controller{
                     'subscribe_time'=>time(),
                     'type'=>3
                 ];
-                WxUser::insert($u_info);
+                WxUser::insertGetId($u_info);
             }
-
+            //获取user_id
+            $user_id=$u['wx_user_id'];
             //生成token
             $token=sha1($data['openid'].$data['session_key'].mt_rand(0,999999));
             //保存token
-            $token_key='xcx_token:'.$token;
-            Redis::set($token_key,time());
-            //设置过期时间
-            Redis::expire($token_key,7200);
+            $redis_login_hash = 'h:xcx:login:' . $token;
+
+            // dd($user_id);
+            $login_info = [
+                'user_id' => $user_id,
+                'user_name' => "",
+                'login_time' => date('Y-m-d H:i:s'),
+                'login_ip' => $request->getClientIp(),
+                'token' => $token,
+                'openid'    => $openid
+            ];
+            // dd($login_info);
+            //保存登录信息
+            Redis::hMset($redis_login_hash, $login_info);
+            // 设置过期时间
+            Redis::expire($redis_login_hash, 7200);
+
             $response=[
                 'errno'=>0,
                 'msg'=>'登录成功',
@@ -103,6 +118,23 @@ class ApiController extends Controller{
     }
     /**商品详情 */
     public function detail(Request $request){
+        //获取token
+        $access_token = $request->get('access_token');
+        // dd($access_token);
+        //验证token是否有效
+        $redis_login_hash = 'h:xcx:login:' . $access_token;
+        $login_info = Redis::hgetAll($redis_login_hash);
+        // dd($login_info);
+        if($login_info){
+            $_SERVER['user_id'] = $login_info['user_id'];
+        }else{
+            $response = [
+                'errno' => 400003,
+                'msg'   => "未授权"
+            ];
+            die(json_encode($response));
+        }
+
         $goods_id=$request->get('goods_id');
         //echo $goods_id;die;
         $key = 'detail:'.$goods_id;
@@ -110,10 +142,7 @@ class ApiController extends Controller{
         // 查询缓存
         if(empty($detail)){
             $detail = Goods::find($goods_id);
-            // 商品不存在
-            if(empty($detail)){
-                return redirect('goods/list');
-            }
+
             Redis::incr('shop_view:'.$detail['goods_id']);
             $detail = $detail->toArray();
             Redis::hMset($key,$detail);
@@ -130,34 +159,82 @@ class ApiController extends Controller{
     }
     /**加入购物车 */
     public function addcart(Request $request){
-        $user_id=$request->get('user_id');
-        echo $user_id;die;
+        $user_id=$_SERVER['user_id'];
+        // echo $user_id;die;
 
-        $goods_id=$request->get('goods_id');
-        //echo $goods_id;die;  
+        $goods_id=$request->post('goods_id');
+        // echo $goods_id;die; 
+
+        //查询商品的价格
+        $price=Goods::find($goods_id)->shop_price;
 
         //购物车保存商品信息
         $cart_info=[
             'goods_id'=>$goods_id,
             'user_id'=>$user_id,
-            'goods_num'=>$goods_num,
+            'goods_num'=>1,
             'add_time'=>time(),
+            'cart_price'=>$price
         ];
 
-        $res=Cart::insertGetId($cart_info);
-        //dd($res);
-        if($res>0){
-            return redirect('cart/list');
-        }else{
-            $data=[
-                'errno'=>500001,
-                'msg'=>'加入购物车失败'
+        $cart_id=Cart::insertGetId($cart_info);
+        // dd($cart_id);
+        if($cart_id){
+            $response = [
+                'errno' => 0,
+                'msg'   => 'ok'
             ];
-            echo json_encode($data);
+        }else{
+            $response=[
+                'errno'=>500002,
+                'msg'=>'加入购物车失败'
+            ]; 
         }
+        return $response;
     }
     /**购物车列表 */
     public function cartlist(){
+        $user_id=$_SERVER['user_id'];
+        // dd($user_id);
+        $goods=Cart::where('user_id',$user_id)->get();
+        // dd($goods);
+        if(empty($goods)){   //购物车无商品 
+            $response=[
+                'errno'=>5000000,
+                'msg'=>'失败',
+            ];
+        }
+        //购物车有商品
+        foreach($goods as $k=>&$v){
+            $g=Goods::find($v['goods_id']);
+            $v['goods_name']=$g->goods_name;
+            $v['goods_img']=$g->goods_img;
+        }
+        // dd($goods);
+        $response = [
+            'errno' => 0,
+            'msg'   => 'ok',
+            'data'  => [
+                'cartlist'  => $goods
+            ]
+        ];
 
+        return $response;
+    }
+    /**收藏 */
+    public function Collection(Request $request){
+        $goods_id=$request->post('goods_id');
+        // dd($goods_id);
+        $user_id=$_SERVER['user_id'];
+        // dd($user_id);
+        //用户收藏的商品有序集合  ss有序集合的意思
+        $redis_key='ss:goods:fav:'.$user_id;
+            //将商品id加入有序集合，并给排序值
+        Redis::Zadd($redis_key,time(),$goods_id);
+        $response=[
+            'errno'=>0,
+            'msg'=>'ok'
+        ];
+        return $response;
     }
 }
