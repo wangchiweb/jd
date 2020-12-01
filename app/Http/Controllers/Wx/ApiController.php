@@ -161,35 +161,49 @@ class ApiController extends Controller{
     public function addcart(Request $request){
         $user_id=$_SERVER['user_id'];
         // echo $user_id;die;
-
+        $goods_num=$request->post('goods_num',1);
+        // dd($goods_num);
         $goods_id=$request->post('goods_id');
         // echo $goods_id;die; 
 
         //查询商品的价格
         $price=Goods::find($goods_id)->shop_price;
 
-        //购物车保存商品信息
-        $cart_info=[
-            'goods_id'=>$goods_id,
-            'user_id'=>$user_id,
-            'goods_num'=>1,
-            'add_time'=>time(),
-            'cart_price'=>$price
-        ];
-
-        $cart_id=Cart::insertGetId($cart_info);
-        // dd($cart_id);
-        if($cart_id){
+        //查询购物车中的商品是否存在
+        $cartinfo=Cart::where(['user_id'=>$user_id,'goods_id'=>$goods_id])->first();
+        // dd($cartinfo);
+        if($cartinfo){   //商品数量 +1
+            Cart::where(['goods_id'=>$goods_id])->update(['goods_num'=>$goods_num]);
             $response = [
                 'errno' => 0,
                 'msg'   => 'ok'
             ];
         }else{
-            $response=[
-                'errno'=>500002,
-                'msg'=>'加入购物车失败'
-            ]; 
+            //购物车保存商品信息
+            $cart_info=[
+                'goods_id'=>$goods_id,
+                'user_id'=>$user_id,
+                'goods_num'=>1,
+                'add_time'=>time(),
+                'cart_price'=>$price
+            ];
+
+            $cart_id=Cart::insertGetId($cart_info);
+            // dd($cart_id);
+            if($cart_id){
+                $response = [
+                    'errno' => 0,
+                    'msg'   => 'ok'
+                ];
+            }else{
+                $response=[
+                    'errno'=>500002,
+                    'msg'=>'加入购物车失败'
+                ]; 
+            }
         }
+
+        
         return $response;
     }
     /**购物车列表 */
@@ -235,6 +249,28 @@ class ApiController extends Controller{
             'errno'=>0,
             'msg'=>'ok'
         ];
+        return $response;
+    }
+    /**购物车中删除商品 */
+    public function delcart(Request $request){
+        //接受goods_id(字符串)
+        $goods_id=$request->post('goods_id');
+        $goods_id=explode(',',$goods_id);   //把字符串转换为数组
+        // dd($goods_id);
+        $user_id=$_SERVER['user_id'];
+        // dd($user_id);
+        $res=Cart::where(['user_id'=>$user_id])->whereIn('goods_id',$goods_id)->delete();
+        if($res){   //删除成功
+            $response=[
+                'errno'=>0,
+                'msg'=>'ok'
+            ];
+        }else{
+            $response=[
+                'errno'=>500002,
+                'msg'=>'内部错误'
+            ];
+        }
         return $response;
     }
 }

@@ -83,5 +83,6 @@ Route::prefix('/api')->group(function(){   //路由分组
     Route::get('/detail','Wx\ApiController@detail');   //商品详情
     Route::post('/addcart','Wx\ApiController@addcart')->middleware('check.token');   //加入购物车
     Route::get('/cartlist','Wx\ApiController@cartlist')->middleware('check.token');   //购物车列表
-    Route::post('/Collection','Wx\ApiController@Collection')->middleware('check.token');   //购物车列表
+    Route::post('/Collection','Wx\ApiController@Collection')->middleware('check.token');   //收藏
+    Route::post('/delcart','Wx\ApiController@delcart')->middleware('check.token');   //购物车中删除商品
 });
